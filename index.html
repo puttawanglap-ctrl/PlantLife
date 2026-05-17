@@ -3,465 +3,792 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ผจญภัยอาณาจักรพยัญชนะไทย 🇹🇭✨</title>
+    <title>วัฏจักรชีวิตของพืช 🌱</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Itim&family=Mali:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #FF85A2;
-            --secondary: #70D6FF;
-            --accent: #FFD670;
-            --success: #99FFAC;
-            --white: #ffffff;
+            --primary: #4ADE80;
+            --primary-dark: #22C55E;
+            --secondary: #FDE047;
+            --accent: #F472B6;
+            --text-main: #374151;
         }
 
         body {
-            font-family: 'Mali', cursive;
-            background: linear-gradient(180deg, #A0E7FF 0%, #FFFFFF 100%);
-            height: 100vh;
+            font-family: 'Kanit', sans-serif;
+            background-color: #f0fdf4;
             margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
             overflow: hidden;
-            user-select: none;
             touch-action: manipulation;
         }
 
-        .kawaii-shadow {
-            box-shadow: 0 8px 0 rgba(0,0,0,0.1);
-        }
-
-        .btn-bounce:active {
-            transform: scale(0.95) translateY(4px);
-            box-shadow: 0 2px 0 rgba(0,0,0,0.1);
-        }
-
-        .floating {
-            animation: floating 3s ease-in-out infinite;
-        }
-
-        @keyframes floating {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-
-        .screen {
-            display: none;
-            height: 100%;
+        #app-container {
             width: 100%;
+            max-width: 420px;
+            height: 100vh;
+            max-height: 900px;
+            background: linear-gradient(180deg, #E0F2FE 0%, #DCFCE7 100%);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+
+        /* Utility Classes */
+        .screen {
             position: absolute;
             top: 0;
             left: 0;
-            padding: 20px;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .active { display: flex; }
-
-        .letter-card {
-            background: white;
-            border: 4px solid var(--primary);
-            border-radius: 25px;
-            transition: all 0.3s;
-            cursor: pointer;
-        }
-
-        .letter-card:hover { transform: rotate(3deg) scale(1.05); }
-
-        .progress-bar {
-            height: 20px;
-            background: #eee;
-            border-radius: 10px;
-            overflow: hidden;
-            border: 2px solid #ddd;
-        }
-
-        .progress-fill {
+            width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, var(--primary), var(--accent));
-            width: 0%;
-            transition: width 0.5s ease;
+            display: none;
+            flex-direction: column;
+            padding: 20px;
+            box-sizing: border-box;
+            background: linear-gradient(180deg, #E0F2FE 0%, #DCFCE7 100%);
         }
 
+        .screen.active {
+            display: flex;
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+
+        /* Animations */
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+        @keyframes float { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-15px) rotate(5deg); } }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+        @keyframes popIn { 0% { transform: scale(0); } 80% { transform: scale(1.1); } 100% { transform: scale(1); } }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
+        @keyframes rainFall { 0% { transform: translateY(-20px); opacity: 0; } 50% { opacity: 1; } 100% { transform: translateY(50px); opacity: 0; } }
+
+        .animate-float { animation: float 3s ease-in-out infinite; }
+        .animate-bounce-slow { animation: bounce 2s infinite; }
+        .animate-pulse-fast { animation: pulse 1.5s infinite; }
+        .animate-pop { animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+        .wrong-shake { animation: shake 0.4s ease-in-out; }
+
+        /* Custom UI Elements */
+        .btn-kawaii {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 25px;
+            font-family: 'Kanit', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 600;
+            box-shadow: 0 6px 0 var(--primary-dark), 0 10px 10px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: all 0.1s;
+            text-align: center;
+            display: inline-block;
+            width: 100%;
+        }
+        .btn-kawaii:active {
+            transform: translateY(6px);
+            box-shadow: 0 0 0 var(--primary-dark);
+        }
+        .btn-kawaii.pink { background-color: var(--accent); box-shadow: 0 6px 0 #DB2777; }
+        .btn-kawaii.yellow { background-color: var(--secondary); color: #854D0E; box-shadow: 0 6px 0 #CA8A04; }
+        .btn-kawaii.blue { background-color: #38BDF8; box-shadow: 0 6px 0 #0284C7; }
+
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+            border: 4px solid white;
+        }
+
+        /* Specific Game Elements */
+        .stage-box {
+            width: 70px;
+            height: 70px;
+            border: 3px dashed #A7F3D0;
+            border-radius: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2.5rem;
+            background: rgba(255,255,255,0.5);
+            transition: all 0.3s;
+        }
+        .stage-item {
+            width: 70px;
+            height: 70px;
+            background: white;
+            border-radius: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2.5rem;
+            box-shadow: 0 4px 0 #E2E8F0;
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+        .stage-item:active { transform: translateY(4px); box-shadow: 0 0 0; }
+        .stage-item.selected { border: 3px solid var(--accent); }
+
+        .tool-btn {
+            width: 60px;
+            height: 60px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2rem;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .tool-btn:active { transform: scale(0.9); }
+
+        .plant-container {
+            height: 250px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items: center;
+            position: relative;
+        }
+
+        #rain-container { position: absolute; width: 100%; height: 100%; pointer-events: none; display: none; }
+        .drop { position: absolute; font-size: 1.5rem; animation: rainFall 0.5s linear forwards; }
+
+        /* Confetti */
         .confetti {
             position: absolute;
             width: 10px;
             height: 10px;
-            background: red;
-            animation: fall 3s linear forwards;
+            background-color: #f00;
+            z-index: 100;
+            animation: fall linear forwards;
         }
-
         @keyframes fall {
             to { transform: translateY(100vh) rotate(360deg); }
         }
 
-        /* Modal styling */
-        .modal-overlay {
-            background: rgba(0,0,0,0.5);
-            backdrop-filter: blur(5px);
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .back-btn {
+            font-size: 1.5rem;
+            background: white;
+            width: 40px; height: 40px;
+            border-radius: 50%;
+            display: flex; justify-content: center; align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
 
-    <!-- UI Overlay (Fixed) -->
-    <div id="ui-overlay" class="hidden fixed top-0 left-0 w-full p-4 z-50 flex justify-between items-center">
-        <div class="flex items-center gap-2">
-            <button onclick="goHome()" class="bg-white p-2 rounded-full border-2 border-pink-400 btn-bounce">🏠</button>
-            <div class="bg-white px-3 py-1 rounded-full border-2 border-pink-400 flex items-center gap-2 shadow-sm">
-                <span id="ui-stars">⭐ 0</span>
-                <span id="ui-coins">🪙 0</span>
-            </div>
+<div id="app-container">
+
+    <!-- 1. LOADING SCREEN -->
+    <div id="screen-loading" class="screen active justify-center items-center bg-green-100">
+        <div class="text-6xl animate-bounce-slow mb-4">🌱</div>
+        <h1 class="text-3xl font-bold text-green-600 mb-8 font-kanit">วัฏจักรชีวิตของพืช</h1>
+        <div class="w-64 h-4 bg-white rounded-full overflow-hidden">
+            <div id="loading-bar" class="h-full bg-green-500 w-0 transition-all duration-1000"></div>
         </div>
-        <div class="flex items-center gap-2">
-            <div class="bg-white px-4 py-1 rounded-full border-2 border-blue-400 font-bold text-blue-600" id="ui-player-name">นักเรียน</div>
-            <button onclick="toggleSound()" id="sound-btn" class="bg-white p-2 rounded-full border-2 border-blue-400 btn-bounce">🔊</button>
+        <p class="mt-4 text-gray-500 font-medium">กำลังเตรียมความสนุก...</p>
+    </div>
+
+    <!-- 2. HOME SCREEN -->
+    <div id="screen-home" class="screen justify-center items-center text-center">
+        <div class="text-8xl animate-float mb-6">🌻</div>
+        <h1 class="text-4xl font-extrabold text-green-700 mb-2 drop-shadow-md">วัฏจักรชีวิต<br>ของพืช</h1>
+        <p class="text-lg text-gray-600 mb-10 font-medium bg-white/50 px-4 py-2 rounded-2xl">มาเรียนรู้การเติบโตของพืชกันเถอะ!</p>
+        
+        <div class="w-full max-w-xs space-y-4">
+            <button onclick="startGameMode('intro')" class="btn-kawaii">📚 เริ่มเรียนรู้</button>
+            <button onclick="showScreen('screen-menu')" class="btn-kawaii pink">🎮 เล่นเกม</button>
+        </div>
+        
+        <div class="absolute bottom-4 left-0 w-full flex justify-around opacity-50 text-2xl pointer-events-none">
+            <span class="animate-float" style="animation-delay: 0s;">🦋</span>
+            <span class="animate-float" style="animation-delay: 1s;">🐝</span>
+            <span class="animate-float" style="animation-delay: 0.5s;">🐞</span>
         </div>
     </div>
 
-    <!-- 1. Login Screen -->
-    <div id="screen-login" class="screen active justify-center bg-[#FFD6E0]">
-        <div class="bg-white p-8 rounded-[40px] border-8 border-pink-300 w-full max-w-sm text-center shadow-2xl">
-            <h1 class="text-3xl font-bold text-pink-500 mb-2">ยินดีต้อนรับ! 🐼</h1>
-            <p class="text-gray-500 mb-6 italic">ใส่ข้อมูลเพื่อเริ่มผจญภัย</p>
-            
-            <input type="text" id="input-name" placeholder="ชื่อเล่น" class="w-full mb-3 p-4 rounded-2xl border-4 border-pink-100 outline-none focus:border-pink-300 text-center text-xl">
-            <div class="flex gap-2 mb-6">
-                <input type="text" id="input-class" placeholder="ชั้น (เช่น ป.1)" class="w-1/2 p-4 rounded-2xl border-4 border-pink-100 outline-none focus:border-pink-300 text-center">
-                <input type="number" id="input-no" placeholder="เลขที่" class="w-1/2 p-4 rounded-2xl border-4 border-pink-100 outline-none focus:border-pink-300 text-center">
+    <!-- 3. INTRO / LEARNING SCREEN -->
+    <div id="screen-intro" class="screen">
+        <div class="top-bar">
+            <div class="back-btn" onclick="showScreen('screen-home')">⬅️</div>
+            <div class="bg-white px-4 py-1 rounded-full text-green-600 font-bold" id="intro-progress">1/5</div>
+        </div>
+        
+        <div class="flex-1 flex flex-col justify-center items-center">
+            <div class="card w-full text-center relative overflow-visible mt-8">
+                <!-- Mascot -->
+                <div class="absolute -top-12 left-1/2 transform -translate-x-1/2 text-6xl animate-bounce-slow">👩‍🏫</div>
+                
+                <h2 id="intro-title" class="text-2xl font-bold text-blue-600 mt-6 mb-4">วัฏจักรชีวิตของพืช</h2>
+                
+                <div id="intro-visual" class="text-7xl my-6 h-32 flex items-center justify-center animate-pulse-fast">
+                    🌱➡️🌸➡️🍎
+                </div>
+                
+                <p id="intro-desc" class="text-gray-700 text-lg leading-relaxed font-medium min-h-[100px]">
+                    คือกระบวนการเจริญเติบโตที่เริ่มต้นจากเมล็ด พัฒนาเป็นต้นกล้า เติบโตเต็มวัย ออกดอก กลายเป็นผลและเมล็ด วนเวียนต่อเนื่องกัน
+                </p>
             </div>
+        </div>
 
-            <button onclick="startGame()" class="w-full bg-pink-400 hover:bg-pink-500 text-white text-2xl py-4 rounded-2xl font-bold kawaii-shadow btn-bounce">เข้าสู่ห้องเรียน ✨</button>
-            
-            <button onclick="showAdmin()" class="mt-8 text-xs text-gray-300">Admin Only</button>
+        <div class="flex justify-between mt-6 gap-4">
+            <button id="btn-intro-prev" onclick="prevIntro()" class="btn-kawaii bg-gray-400 opacity-50 pointer-events-none w-1/3 text-sm">ย้อนกลับ</button>
+            <button id="btn-intro-next" onclick="nextIntro()" class="btn-kawaii w-2/3">ถัดไป ➡️</button>
         </div>
     </div>
 
-    <!-- 2. Main Menu -->
+    <!-- 4. GAME MENU SCREEN -->
     <div id="screen-menu" class="screen">
-        <div class="mt-20 text-center">
-            <h2 class="text-4xl font-bold text-blue-500 floating mb-2">เลือกด่านเรียนรู้ 🏰</h2>
-            <div class="grid grid-cols-2 gap-4 mt-8 max-w-md">
-                <button onclick="loadModule('thai')" class="bg-[#FF9AA2] p-6 rounded-3xl border-b-8 border-red-400 text-white font-bold text-xl btn-bounce">
-                    <div class="text-4xl mb-2">🇹🇭</div> ก-ฮ
-                </button>
-                <button onclick="loadModule('vowel')" class="bg-[#B5EAD7] p-6 rounded-3xl border-b-8 border-green-400 text-white font-bold text-xl btn-bounce">
-                    <div class="text-4xl mb-2">🌈</div> สระไทย
-                </button>
-                <button onclick="loadModule('tone')" class="bg-[#FFDAC1] p-6 rounded-3xl border-b-8 border-orange-300 text-white font-bold text-xl btn-bounce">
-                    <div class="text-4xl mb-2">✨</div> วรรณยุกต์
-                </button>
-                <button onclick="loadModule('abc')" class="bg-[#C7CEEA] p-6 rounded-3xl border-b-8 border-purple-400 text-white font-bold text-xl btn-bounce">
-                    <div class="text-4xl mb-2">🔤</div> A-Z
-                </button>
-            </div>
-            
-            <div class="mt-10 flex gap-4">
-                <button onclick="showLeaderboard()" class="bg-yellow-400 px-6 py-2 rounded-full text-white font-bold btn-bounce shadow-md">🏆 อันดับ</button>
-                <button onclick="showStickers()" class="bg-blue-400 px-6 py-2 rounded-full text-white font-bold btn-bounce shadow-md">🎁 ของสะสม</button>
-            </div>
+        <div class="top-bar">
+            <div class="back-btn" onclick="showScreen('screen-home')">⬅️</div>
+            <h2 class="text-2xl font-bold text-green-700">เลือกเกม</h2>
+            <div class="w-10"></div>
         </div>
-    </div>
 
-    <!-- 3. Learning View (Consonants) -->
-    <div id="screen-game" class="screen">
-        <div class="mt-16 w-full max-w-md">
-            <div class="progress-bar mb-4">
-                <div id="game-progress" class="progress-fill"></div>
+        <div class="flex-1 flex flex-col gap-4 mt-4">
+            <div onclick="initDragDropGame()" class="card flex items-center gap-4 cursor-pointer hover:scale-105 transition-transform">
+                <div class="text-5xl bg-blue-100 p-3 rounded-2xl">🧩</div>
+                <div>
+                    <h3 class="text-xl font-bold text-gray-800">1. เรียงลำดับวัฏจักร</h3>
+                    <p class="text-sm text-gray-500">จับคู่ภาพให้ถูกลำดับ</p>
+                </div>
             </div>
-            
-            <div id="question-area" class="bg-white p-6 rounded-[30px] border-4 border-pink-200 shadow-xl text-center relative">
-                <div id="mascot" class="absolute -top-12 -left-4 text-5xl floating">🐼</div>
-                <h3 id="question-text" class="text-2xl font-bold text-gray-700 mb-6">จิ้มรูปที่คู่กับตัวอักษรนี้!</h3>
-                
-                <div id="target-display" class="text-8xl font-bold text-pink-500 mb-8 p-4 bg-pink-50 rounded-2xl inline-block min-w-[120px]">ก</div>
-                
-                <div id="options-grid" class="grid grid-cols-2 gap-4">
-                    <!-- Options injected by JS -->
+
+            <div onclick="initGrowGame()" class="card flex items-center gap-4 cursor-pointer hover:scale-105 transition-transform">
+                <div class="text-5xl bg-green-100 p-3 rounded-2xl">💧</div>
+                <div>
+                    <h3 class="text-xl font-bold text-gray-800">2. ปลูกต้นไม้จำลอง</h3>
+                    <p class="text-sm text-gray-500">รดน้ำให้แสงแดดพืชเติบโต</p>
+                </div>
+            </div>
+
+            <div onclick="initQuizGame()" class="card flex items-center gap-4 cursor-pointer hover:scale-105 transition-transform">
+                <div class="text-5xl bg-yellow-100 p-3 rounded-2xl">📝</div>
+                <div>
+                    <h3 class="text-xl font-bold text-gray-800">3. ทบทวนความรู้</h3>
+                    <p class="text-sm text-gray-500">ตอบคำถามวิทยาศาสตร์</p>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- 4. Result Screen -->
-    <div id="screen-result" class="screen justify-center">
-        <div class="bg-white p-10 rounded-[40px] border-8 border-yellow-300 text-center max-w-sm shadow-2xl">
-            <h1 class="text-5xl mb-4">🎉</h1>
-            <h2 class="text-3xl font-bold text-gray-800">เก่งมาก!</h2>
-            <p class="text-xl text-pink-500 mb-6" id="result-name">นักเรียนตัวน้อย</p>
-            
-            <div class="bg-yellow-50 p-6 rounded-2xl mb-8">
-                <div class="flex justify-around items-center">
-                    <div>
-                        <div class="text-3xl font-bold text-yellow-500" id="result-stars">0</div>
-                        <div class="text-sm text-gray-500">ดาวที่ได้รับ</div>
-                    </div>
-                    <div>
-                        <div class="text-3xl font-bold text-blue-500" id="result-coins">0</div>
-                        <div class="text-sm text-gray-500">เหรียญทอง</div>
-                    </div>
-                </div>
-            </div>
+    <!-- 5. MINIGAME 1: DRAG & DROP (Order) -->
+    <div id="screen-game-order" class="screen">
+        <div class="top-bar">
+            <div class="back-btn" onclick="showScreen('screen-menu')">⬅️</div>
+            <h2 class="text-xl font-bold text-blue-600">เรียงลำดับ</h2>
+            <div class="text-xl bg-white px-3 py-1 rounded-full">⭐ <span id="order-score">0</span></div>
+        </div>
 
-            <button onclick="goHome()" class="w-full bg-green-400 text-white text-2xl py-4 rounded-2xl font-bold btn-bounce kawaii-shadow mb-4">กลับหน้าหลัก</button>
-            <button onclick="window.location.reload()" class="text-gray-400 font-bold underline">เล่นอีกรอบ</button>
+        <div class="text-center mb-6">
+            <p class="font-bold text-gray-700">แตะเพื่อเรียงลำดับการเติบโตให้ถูกต้อง</p>
+        </div>
+
+        <!-- Target Slots -->
+        <div class="flex justify-between items-center bg-white/50 p-4 rounded-2xl mb-8 relative">
+            <div class="absolute top-1/2 left-0 w-full h-1 bg-green-300 -z-10 transform -translate-y-1/2"></div>
+            <div class="flex flex-col items-center gap-2">
+                <div class="stage-box" id="slot-0" onclick="placeItem(0)"></div>
+                <span class="text-xs font-bold text-gray-500">1. เมล็ด</span>
+            </div>
+            <div class="text-green-500 font-bold">➡️</div>
+            <div class="flex flex-col items-center gap-2">
+                <div class="stage-box" id="slot-1" onclick="placeItem(1)"></div>
+                <span class="text-xs font-bold text-gray-500">2. ต้นกล้า</span>
+            </div>
+            <div class="text-green-500 font-bold">➡️</div>
+            <div class="flex flex-col items-center gap-2">
+                <div class="stage-box" id="slot-2" onclick="placeItem(2)"></div>
+                <span class="text-xs font-bold text-gray-500">3. ดอก</span>
+            </div>
+            <div class="text-green-500 font-bold">➡️</div>
+            <div class="flex flex-col items-center gap-2">
+                <div class="stage-box" id="slot-3" onclick="placeItem(3)"></div>
+                <span class="text-xs font-bold text-gray-500">4. ผล</span>
+            </div>
+        </div>
+
+        <!-- Draggable Items -->
+        <div class="grid grid-cols-2 gap-4 place-items-center mt-auto mb-10" id="draggable-items">
+            <!-- Items injected by JS -->
+        </div>
+
+        <button onclick="checkOrder()" class="btn-kawaii blue mt-auto">ตรวจคำตอบ ✨</button>
+    </div>
+
+    <!-- 6. MINIGAME 2: GROW THE PLANT -->
+    <div id="screen-game-grow" class="screen relative">
+        <div id="rain-container"></div>
+        <div class="top-bar z-10">
+            <div class="back-btn" onclick="showScreen('screen-menu')">⬅️</div>
+            <h2 class="text-xl font-bold text-green-700">ปลูกต้นไม้</h2>
+            <div class="w-10"></div>
+        </div>
+
+        <div class="text-center bg-white/80 p-3 rounded-xl shadow-sm z-10 mb-4 text-sm font-bold text-gray-700" id="grow-instruction">
+            พืชต้องการอะไรในการงอกนะ?
+        </div>
+
+        <div class="flex-1 plant-container">
+            <div id="sun-effect" class="absolute top-10 right-10 text-6xl opacity-0 transition-opacity duration-500">☀️</div>
+            <div id="bee-effect" class="absolute top-20 left-10 text-4xl opacity-0 transition-opacity duration-500">🐝</div>
+            
+            <div id="plant-sprite" class="text-8xl transition-all duration-700 transform origin-bottom animate-pop">🌰</div>
+            <div class="w-full h-16 bg-[#854D0E] rounded-t-[50%] mt-[-10px] relative z-10 border-t-4 border-[#713F12]"></div>
+        </div>
+
+        <div class="bg-white rounded-t-3xl p-6 shadow-[0_-10px_20px_rgba(0,0,0,0.05)] z-10 flex justify-around items-center">
+            <div class="flex flex-col items-center gap-2">
+                <div class="tool-btn bg-blue-100" onclick="useTool('water')">💦</div>
+                <span class="text-xs font-bold text-gray-600">รดน้ำ</span>
+            </div>
+            <div class="flex flex-col items-center gap-2">
+                <div class="tool-btn bg-yellow-100" onclick="useTool('sun')">☀️</div>
+                <span class="text-xs font-bold text-gray-600">แสงแดด</span>
+            </div>
+            <div class="flex flex-col items-center gap-2">
+                <div class="tool-btn bg-pink-100" onclick="useTool('bee')">🐝</div>
+                <span class="text-xs font-bold text-gray-600">แมลง</span>
+            </div>
         </div>
     </div>
 
-    <!-- 5. Admin Panel -->
-    <div id="screen-admin" class="screen bg-gray-100 p-4">
-        <div class="bg-white w-full h-full rounded-2xl p-6 overflow-auto shadow-inner">
-            <div class="flex justify-between items-center mb-6">
-                <h2 class="text-2xl font-bold text-gray-800">📊 แผงควบคุมคุณครู</h2>
-                <button onclick="goHome()" class="text-red-500 font-bold">ปิด [X]</button>
+    <!-- 7. MINIGAME 3: QUIZ -->
+    <div id="screen-game-quiz" class="screen">
+        <div class="top-bar">
+            <div class="back-btn" onclick="showScreen('screen-menu')">⬅️</div>
+            <div class="bg-white px-4 py-1 rounded-full text-pink-600 font-bold"><span id="quiz-progress">1</span>/3</div>
+        </div>
+
+        <div class="flex-1 flex flex-col mt-4">
+            <div class="card text-center mb-8 relative">
+                <div class="absolute -top-6 left-1/2 transform -translate-x-1/2 text-4xl">🤔</div>
+                <h3 id="quiz-question" class="text-xl font-bold text-gray-800 mt-4 min-h-[60px] flex items-center justify-center">
+                    คำถาม?
+                </h3>
             </div>
-            
-            <table class="w-full text-left text-sm">
-                <thead class="bg-gray-200">
-                    <tr>
-                        <th class="p-2">ชื่อ</th>
-                        <th class="p-2">ชั้น</th>
-                        <th class="p-2">ดาว</th>
-                        <th class="p-2">คะแนนรวม</th>
-                    </tr>
-                </thead>
-                <tbody id="admin-table-body">
-                    <!-- Data here -->
-                </tbody>
-            </table>
-            
-            <div class="mt-8 flex gap-2">
-                <button onclick="exportData()" class="bg-blue-500 text-white px-4 py-2 rounded-lg text-xs">Export CSV</button>
-                <button onclick="clearData()" class="bg-red-500 text-white px-4 py-2 rounded-lg text-xs">ล้างข้อมูลทั้งหมด</button>
+
+            <div id="quiz-options" class="flex flex-col gap-4">
+                <!-- Options injected by JS -->
             </div>
         </div>
     </div>
 
-    <script>
-        // --- Game Logic & State ---
-        let gameState = {
-            player: { name: '', class: '', no: '', stars: 0, coins: 0, level: 1 },
-            currentModule: 'thai',
-            currentStep: 0,
-            totalSteps: 5,
-            score: 0,
-            isMuted: false
-        };
+    <!-- 8. RESULT / SUCCESS SCREEN -->
+    <div id="screen-result" class="screen justify-center items-center text-center z-50">
+        <div class="text-8xl animate-bounce-slow mb-6" id="result-icon">🏆</div>
+        <h1 class="text-4xl font-bold text-yellow-500 mb-4 drop-shadow-md" id="result-title">ยอดเยี่ยม!</h1>
+        <div class="card w-full max-w-xs mb-8">
+            <p class="text-lg text-gray-700 font-medium" id="result-desc">คุณเก่งมากที่ทำสำเร็จ</p>
+        </div>
+        <button onclick="showScreen('screen-menu')" class="btn-kawaii pink">กลับหน้าเมนู</button>
+    </div>
 
-        const DATA_THAI = [
-            { char: 'ก', img: '🐔', name: 'ไก่' },
-            { char: 'ข', img: '🥚', name: 'ไข่' },
-            { char: 'ค', img: '🐃', name: 'ควาย' },
-            { char: 'ง', img: '🐍', name: 'งู' },
-            { char: 'จ', img: '🍽️', name: 'จาน' },
-            { char: 'ฉ', img: '🥁', name: 'ฉิ่ง' },
-            { char: 'ช', img: '🐘', name: 'ช้าง' }
-        ];
+</div>
 
-        const DATA_ABC = [
-            { char: 'A', img: '🍎', name: 'Apple' },
-            { char: 'B', img: '🐝', name: 'Bee' },
-            { char: 'C', img: '🐱', name: 'Cat' },
-            { char: 'D', img: '🐶', name: 'Dog' }
-        ];
+<script>
+    // --- Data & State ---
+    const introData = [
+        { title: "วัฏจักรชีวิตของพืช", emoji: "🌱➡️🌸", desc: "คือกระบวนการเจริญเติบโตที่เริ่มต้นจากเมล็ด เติบโต ออกดอก กลายเป็นผลและเมล็ด วนเวียนต่อเนื่องกัน" },
+        { title: "1. ระยะเมล็ด", emoji: "🌰", desc: "มีเปลือกหุ้มและอาหารสะสมซ่อนอยู่ข้างใน เริ่มงอกเมื่อได้รับ น้ำ อากาศ และอุณหภูมิที่พอเหมาะ" },
+        { title: "2. ระยะต้นกล้า", emoji: "🌱", desc: "รากงอกลงดิน ยอดงอกขึ้นฟ้า มีใบเพื่อสร้างอาหาร (สังเคราะห์แสง) ลำต้นเริ่มสูงขึ้น" },
+        { title: "3. ระยะออกดอก", emoji: "🌸", desc: "เมื่อเจริญเติบโตเต็มที่ จะสร้างดอกเพื่อใช้ในการสืบพันธุ์ โดยมีแมลงช่วยผสมเกสร" },
+        { title: "4. ระยะผลและเมล็ด", emoji: "🍎", desc: "กลีบดอกร่วงไป รังไข่เจริญกลายเป็นผล และออวุลกลายเป็นเมล็ด พร้อมที่จะงอกเป็นต้นใหม่!" }
+    ];
+    let currentIntroIndex = 0;
 
-        // --- Core Functions ---
+    const orderGameData = [
+        { id: 0, name: "เมล็ด", emoji: "🌰" },
+        { id: 1, name: "ต้นกล้า", emoji: "🌱" },
+        { id: 2, name: "ดอก", emoji: "🌸" },
+        { id: 3, name: "ผล", emoji: "🍎" }
+    ];
+    let selectedOrderItem = null;
+    let placedItems = [null, null, null, null];
 
-        function startGame() {
-            const name = document.getElementById('input-name').value;
-            if (!name) return alert('กรุณาใส่ชื่อก่อนจ้า 😊');
-            
-            gameState.player.name = name;
-            gameState.player.class = document.getElementById('input-class').value;
-            gameState.player.no = document.getElementById('input-no').value;
+    let growState = 0; // 0:seed, 1:sprout, 2:flower, 3:fruit
+    
+    const quizData = [
+        { q: "ส่วนใดของพืชที่ทำหน้าที่ในการสืบพันธุ์?", options: ["ก. ราก", "ข. ลำต้น", "ค. ดอก", "ง. ใบ"], ans: 2 },
+        { q: "เมล็ดต้องการสิ่งใดบ้างในการงอก?", options: ["ก. ดินและปุ๋ย", "ข. น้ำ อากาศ อุณหภูมิ", "ค. แสงแดดจัด", "ง. แมลง"], ans: 1 },
+        { q: "หลังจากดอกได้รับการปฏิสนธิ จะเจริญไปเป็นอะไร?", options: ["ก. ใบไม้", "ข. ผลและเมล็ด", "ค. กิ่งก้าน", "ง. รากแก้ว"], ans: 1 }
+    ];
+    let currentQuizIndex = 0;
+    let quizScore = 0;
 
-            document.getElementById('ui-player-name').innerText = name;
-            document.getElementById('ui-overlay').classList.remove('hidden');
-            
-            savePlayer();
-            switchScreen('screen-menu');
-        }
+    // --- Core Functions ---
+    function showScreen(screenId) {
+        document.querySelectorAll('.screen').forEach(s => {
+            s.classList.remove('active');
+            s.style.display = 'none'; // reset
+        });
+        const target = document.getElementById(screenId);
+        target.style.display = 'flex';
+        // Small timeout to allow display:flex to apply before adding class for animation
+        setTimeout(() => target.classList.add('active'), 10);
+    }
 
-        function switchScreen(screenId) {
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            document.getElementById(screenId).classList.add('active');
-        }
-
-        function loadModule(module) {
-            gameState.currentModule = module;
-            gameState.currentStep = 0;
-            gameState.score = 0;
-            updateProgress();
-            nextQuestion();
-            switchScreen('screen-game');
-        }
-
-        function nextQuestion() {
-            if (gameState.currentStep >= gameState.totalSteps) {
-                showResults();
-                return;
+    // --- Boot Sequence ---
+    window.onload = () => {
+        let progress = 0;
+        const bar = document.getElementById('loading-bar');
+        const interval = setInterval(() => {
+            progress += 20;
+            bar.style.width = `${progress}%`;
+            if (progress >= 100) {
+                clearInterval(interval);
+                setTimeout(() => showScreen('screen-home'), 500);
             }
+        }, 200);
+    };
 
-            const dataSet = gameState.currentModule === 'abc' ? DATA_ABC : DATA_THAI;
-            const correct = dataSet[Math.floor(Math.random() * dataSet.length)];
-            
-            document.getElementById('target-display').innerText = correct.char;
-            
-            // Generate options
-            let options = [correct];
-            while (options.length < 4) {
-                let random = dataSet[Math.floor(Math.random() * dataSet.length)];
-                if (!options.find(o => o.char === random.char)) options.push(random);
-            }
-            options.sort(() => Math.random() - 0.5);
+    function startGameMode(mode) {
+        if (mode === 'intro') {
+            currentIntroIndex = 0;
+            updateIntroScreen();
+            showScreen('screen-intro');
+        }
+    }
 
-            const grid = document.getElementById('options-grid');
-            grid.innerHTML = '';
-            options.forEach(opt => {
-                const btn = document.createElement('button');
-                btn.className = "bg-blue-50 p-6 rounded-2xl border-4 border-blue-100 hover:border-blue-400 text-4xl transition-all btn-bounce";
-                btn.innerHTML = `<div>${opt.img}</div><div class="text-sm mt-1 text-gray-500 font-bold">${opt.name}</div>`;
-                btn.onclick = () => checkAnswer(opt.char === correct.char, btn);
-                grid.appendChild(btn);
-            });
+    // --- Intro Logic ---
+    function updateIntroScreen() {
+        const data = introData[currentIntroIndex];
+        document.getElementById('intro-title').innerText = data.title;
+        document.getElementById('intro-visual').innerText = data.emoji;
+        document.getElementById('intro-desc').innerText = data.desc;
+        document.getElementById('intro-progress').innerText = `${currentIntroIndex + 1}/${introData.length}`;
+
+        const btnPrev = document.getElementById('btn-intro-prev');
+        const btnNext = document.getElementById('btn-intro-next');
+
+        if (currentIntroIndex === 0) {
+            btnPrev.classList.add('opacity-50', 'pointer-events-none');
+            btnPrev.classList.remove('bg-pink-400');
+            btnPrev.classList.add('bg-gray-400');
+        } else {
+            btnPrev.classList.remove('opacity-50', 'pointer-events-none', 'bg-gray-400');
+            btnPrev.classList.add('pink');
         }
 
-        function checkAnswer(isCorrect, btn) {
-            if (isCorrect) {
-                playSound('correct');
-                btn.classList.replace('border-blue-100', 'border-green-400');
-                btn.classList.add('bg-green-50');
-                gameState.player.stars += 1;
-                gameState.player.coins += 5;
-                gameState.score += 1;
-                createConfetti();
-                
-                setTimeout(() => {
-                    gameState.currentStep++;
-                    updateProgress();
-                    updateUI();
-                    nextQuestion();
-                }, 800);
+        if (currentIntroIndex === introData.length - 1) {
+            btnNext.innerText = "เล่นเกม! 🎮";
+            btnNext.classList.remove('bg-primary');
+            btnNext.classList.add('pink');
+            btnNext.onclick = () => showScreen('screen-menu');
+        } else {
+            btnNext.innerText = "ถัดไป ➡️";
+            btnNext.classList.remove('pink');
+            btnNext.classList.add('bg-primary');
+            btnNext.onclick = nextIntro;
+        }
+
+        // Add pop animation to visual
+        const visual = document.getElementById('intro-visual');
+        visual.classList.remove('animate-pop');
+        void visual.offsetWidth; // trigger reflow
+        visual.classList.add('animate-pop');
+    }
+
+    function nextIntro() {
+        if (currentIntroIndex < introData.length - 1) {
+            currentIntroIndex++;
+            updateIntroScreen();
+        }
+    }
+    function prevIntro() {
+        if (currentIntroIndex > 0) {
+            currentIntroIndex--;
+            updateIntroScreen();
+        }
+    }
+
+    // --- Minigame 1: Drag & Drop (Tap to place) ---
+    function initDragDropGame() {
+        placedItems = [null, null, null, null];
+        selectedOrderItem = null;
+        
+        // Render empty slots
+        for(let i=0; i<4; i++) {
+            const slot = document.getElementById(`slot-${i}`);
+            slot.innerHTML = '';
+            slot.className = 'stage-box';
+        }
+
+        // Shuffle and render items
+        const shuffled = [...orderGameData].sort(() => Math.random() - 0.5);
+        const container = document.getElementById('draggable-items');
+        container.innerHTML = '';
+        
+        shuffled.forEach(item => {
+            const div = document.createElement('div');
+            div.className = 'stage-item';
+            div.id = `item-${item.id}`;
+            div.innerHTML = item.emoji;
+            div.onclick = () => selectItem(item.id, div);
+            container.appendChild(div);
+        });
+
+        showScreen('screen-game-order');
+    }
+
+    function selectItem(id, el) {
+        document.querySelectorAll('.stage-item').forEach(d => d.classList.remove('selected'));
+        el.classList.add('selected');
+        selectedOrderItem = id;
+    }
+
+    function placeItem(slotIndex) {
+        if (selectedOrderItem !== null) {
+            const itemData = orderGameData.find(i => i.id === selectedOrderItem);
+            const slot = document.getElementById(`slot-${slotIndex}`);
+            
+            // Visual update
+            slot.innerHTML = `<div class="animate-pop text-4xl">${itemData.emoji}</div>`;
+            slot.style.border = "3px solid var(--primary)";
+            slot.style.background = "white";
+            
+            // Hide original
+            document.getElementById(`item-${selectedOrderItem}`).style.visibility = 'hidden';
+            
+            // If replacing, show old one back
+            if (placedItems[slotIndex] !== null) {
+                 document.getElementById(`item-${placedItems[slotIndex]}`).style.visibility = 'visible';
+            }
+            
+            placedItems[slotIndex] = selectedOrderItem;
+            selectedOrderItem = null;
+        }
+    }
+
+    function checkOrder() {
+        if (placedItems.includes(null)) {
+            alertMsg('วางให้ครบทุกช่องก่อนนะ!');
+            return;
+        }
+
+        let correct = true;
+        for (let i = 0; i < 4; i++) {
+            const slot = document.getElementById(`slot-${i}`);
+            if (placedItems[i] === i) {
+                slot.style.borderColor = "var(--primary-dark)";
+                slot.style.background = "#DCFCE7";
             } else {
-                playSound('wrong');
-                btn.classList.add('animate-shake', 'bg-red-50', 'border-red-300');
-                setTimeout(() => btn.classList.remove('bg-red-50', 'border-red-300'), 500);
+                correct = false;
+                slot.style.borderColor = "red";
+                slot.style.background = "#FEE2E2";
+                slot.classList.add('wrong-shake');
+                setTimeout(() => slot.classList.remove('wrong-shake'), 400);
             }
         }
 
-        function updateProgress() {
-            const percent = (gameState.currentStep / gameState.totalSteps) * 100;
-            document.getElementById('game-progress').style.width = percent + '%';
+        if (correct) {
+            triggerConfetti();
+            setTimeout(() => showResult("เก่งมาก!", "เรียงลำดับได้ถูกต้องสมบูรณ์", "🏆"), 1000);
+        } else {
+            setTimeout(() => alertMsg('ลองจัดเรียงใหม่ดูอีกครั้งนะ สู้ๆ!'), 500);
+            // Reset wrong ones after delay? Or let user re-click.
+            // For simplicity in this logic, let them tap items back from slots to reset.
+            // Actually, adding a reset button is cleaner. I'll just clear them all for this simple version if wrong.
+            setTimeout(initDragDropGame, 2000);
+        }
+    }
+
+    // --- Minigame 2: Grow Plant ---
+    function initGrowGame() {
+        growState = 0;
+        updateGrowVisuals();
+        showScreen('screen-game-grow');
+    }
+
+    function updateGrowVisuals() {
+        const sprite = document.getElementById('plant-sprite');
+        const inst = document.getElementById('grow-instruction');
+        
+        sprite.classList.remove('animate-pop');
+        void sprite.offsetWidth;
+        sprite.classList.add('animate-pop');
+
+        if (growState === 0) {
+            sprite.innerText = '🌰';
+            inst.innerText = "เมล็ดต้องการ 'น้ำ' เพื่อเริ่มงอก";
+        } else if (growState === 1) {
+            sprite.innerText = '🌱';
+            sprite.style.transform = 'scale(1.2)';
+            inst.innerText = "ต้นกล้าต้องการ 'แสงแดด' เพื่อสร้างอาหาร";
+        } else if (growState === 2) {
+            sprite.innerText = '🌿';
+            sprite.style.transform = 'scale(1.5)';
+            inst.innerText = "ต้นไม้โตแล้ว ต้องการ 'แมลง' ช่วยผสมเกสร";
+        } else if (growState === 3) {
+            sprite.innerText = '🌸';
+            sprite.style.transform = 'scale(1.6)';
+            setTimeout(() => {
+                sprite.innerText = '🍎';
+                sprite.classList.remove('animate-pop');
+                void sprite.offsetWidth;
+                sprite.classList.add('animate-pop');
+                inst.innerText = "กลายเป็นผลและเมล็ดแล้ว! 🎉";
+                triggerConfetti();
+                setTimeout(() => showResult("สุดยอดชาวสวน!", "คุณปลูกต้นไม้จนออกผลได้สำเร็จ", "🍎"), 2500);
+            }, 1500);
+        }
+    }
+
+    function useTool(tool) {
+        if (growState === 3) return;
+
+        const sprite = document.getElementById('plant-sprite');
+        
+        if (tool === 'water' && growState === 0) {
+            createRain();
+            setTimeout(() => { growState++; updateGrowVisuals(); }, 1000);
+        } 
+        else if (tool === 'sun' && growState === 1) {
+            const sun = document.getElementById('sun-effect');
+            sun.style.opacity = '1';
+            setTimeout(() => { sun.style.opacity = '0'; growState++; updateGrowVisuals(); }, 1500);
+        }
+        else if (tool === 'bee' && growState === 2) {
+            const bee = document.getElementById('bee-effect');
+            bee.style.opacity = '1';
+            bee.style.transform = 'translate(100px, 50px)';
+            setTimeout(() => { 
+                bee.style.opacity = '0'; 
+                bee.style.transform = 'translate(0,0)';
+                growState++; 
+                updateGrowVisuals(); 
+            }, 1500);
+        } else {
+            // Wrong tool
+            sprite.classList.add('wrong-shake');
+            setTimeout(() => sprite.classList.remove('wrong-shake'), 400);
+        }
+    }
+
+    function createRain() {
+        const container = document.getElementById('rain-container');
+        container.style.display = 'block';
+        for(let i=0; i<10; i++) {
+            const drop = document.createElement('div');
+            drop.className = 'drop';
+            drop.innerText = '💧';
+            drop.style.left = Math.random() * 80 + 10 + '%';
+            drop.style.animationDelay = Math.random() * 0.5 + 's';
+            container.appendChild(drop);
+        }
+        setTimeout(() => {
+            container.innerHTML = '';
+            container.style.display = 'none';
+        }, 1000);
+    }
+
+    // --- Minigame 3: Quiz ---
+    function initQuizGame() {
+        currentQuizIndex = 0;
+        quizScore = 0;
+        loadQuestion();
+        showScreen('screen-game-quiz');
+    }
+
+    function loadQuestion() {
+        const data = quizData[currentQuizIndex];
+        document.getElementById('quiz-progress').innerText = currentQuizIndex + 1;
+        document.getElementById('quiz-question').innerText = data.q;
+        
+        const container = document.getElementById('quiz-options');
+        container.innerHTML = '';
+        
+        data.options.forEach((opt, index) => {
+            const btn = document.createElement('button');
+            btn.className = 'btn-kawaii bg-white text-gray-700 !shadow-[0_4px_0_#E2E8F0] !text-left text-lg';
+            btn.innerText = opt;
+            btn.onclick = () => checkAnswer(index, btn);
+            container.appendChild(btn);
+        });
+    }
+
+    function checkAnswer(selectedIndex, btnEl) {
+        const correctIndex = quizData[currentQuizIndex].ans;
+        const allBtns = document.getElementById('quiz-options').children;
+        
+        // Disable all
+        for(let b of allBtns) { b.disabled = true; b.style.pointerEvents = 'none'; }
+
+        if (selectedIndex === correctIndex) {
+            btnEl.classList.remove('bg-white', 'text-gray-700');
+            btnEl.classList.add('bg-green-500', 'text-white', '!shadow-[0_4px_0_#15803D]');
+            quizScore++;
+            triggerConfetti(50); // mini confetti
+        } else {
+            btnEl.classList.remove('bg-white', 'text-gray-700');
+            btnEl.classList.add('bg-red-400', 'text-white', '!shadow-[0_4px_0_#B91C1C]', 'wrong-shake');
+            allBtns[correctIndex].classList.remove('bg-white', 'text-gray-700');
+            allBtns[correctIndex].classList.add('bg-green-400', 'text-white'); // show correct
         }
 
-        function updateUI() {
-            document.getElementById('ui-stars').innerText = '⭐ ' + gameState.player.stars;
-            document.getElementById('ui-coins').innerText = '🪙 ' + gameState.player.coins;
-        }
-
-        function showResults() {
-            document.getElementById('result-name').innerText = `${gameState.player.name} (${gameState.player.class})`;
-            document.getElementById('result-stars').innerText = gameState.score;
-            document.getElementById('result-coins').innerText = gameState.score * 5;
-            saveStats();
-            switchScreen('screen-result');
-        }
-
-        function goHome() {
-            switchScreen('screen-menu');
-        }
-
-        // --- Sound & Effects ---
-        function toggleSound() {
-            gameState.isMuted = !gameState.isMuted;
-            document.getElementById('sound-btn').innerText = gameState.isMuted ? '🔇' : '🔊';
-        }
-
-        function playSound(type) {
-            if (gameState.isMuted) return;
-            // Native synthesis for accessibility
-            const msg = new SpeechSynthesisUtterance();
-            msg.lang = 'th-TH';
-            if (type === 'correct') {
-                msg.text = 'เก่งมากจ้า';
-            } else if (type === 'wrong') {
-                msg.text = 'ลองใหม่นะ';
+        setTimeout(() => {
+            currentQuizIndex++;
+            if (currentQuizIndex < quizData.length) {
+                loadQuestion();
+            } else {
+                let msg = quizScore === 3 ? "เก่งมาก อัจฉริยะน้อย!" : "พยายามได้ดีมาก!";
+                showResult(`ได้คะแนน ${quizScore}/${quizData.length}`, msg, "⭐");
+                if(quizScore === 3) triggerConfetti();
             }
-            window.speechSynthesis.speak(msg);
-        }
+        }, 1500);
+    }
 
-        function createConfetti() {
-            for (let i = 0; i < 20; i++) {
-                const c = document.createElement('div');
-                c.className = 'confetti';
-                c.style.left = Math.random() * 100 + 'vw';
-                c.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
-                c.style.animationDelay = Math.random() * 2 + 's';
-                document.body.appendChild(c);
-                setTimeout(() => c.remove(), 3000);
-            }
-        }
+    // --- Utilities ---
+    function showResult(title, desc, icon) {
+        document.getElementById('result-title').innerText = title;
+        document.getElementById('result-desc').innerText = desc;
+        document.getElementById('result-icon').innerText = icon;
+        showScreen('screen-result');
+    }
 
-        // --- Data Persistence ---
-        function savePlayer() {
-            localStorage.setItem('thai_quest_player', JSON.stringify(gameState.player));
-        }
+    function alertMsg(msg) {
+        // Custom simple alert overlay instead of browser alert
+        const div = document.createElement('div');
+        div.className = 'fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white px-6 py-4 rounded-2xl shadow-2xl z-[100] text-center font-bold text-gray-800 animate-pop border-4 border-pink-400';
+        div.innerText = msg;
+        document.getElementById('app-container').appendChild(div);
+        setTimeout(() => div.remove(), 2000);
+    }
 
-        function saveStats() {
-            let history = JSON.parse(localStorage.getItem('thai_quest_history') || '[]');
-            history.push({
-                ...gameState.player,
-                timestamp: new Date().toISOString(),
-                module: gameState.currentModule,
-                lastScore: gameState.score
-            });
-            localStorage.setItem('thai_quest_history', JSON.stringify(history));
+    function triggerConfetti(amount = 100) {
+        const colors = ['#FDE047', '#4ADE80', '#F472B6', '#38BDF8', '#A78BFA'];
+        const container = document.getElementById('app-container');
+        for (let i = 0; i < amount; i++) {
+            const conf = document.createElement('div');
+            conf.className = 'confetti';
+            conf.style.left = Math.random() * 100 + '%';
+            conf.style.top = -10 + 'px';
+            conf.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+            conf.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+            conf.style.animationDuration = Math.random() * 2 + 1 + 's';
+            conf.style.animationDelay = Math.random() * 0.5 + 's';
+            container.appendChild(conf);
+            
+            setTimeout(() => conf.remove(), 3000);
         }
-
-        // --- Admin Dash ---
-        function showAdmin() {
-            const pass = prompt('ใส่รหัสผ่านคุณครู:');
-            if (pass === 'admin1234') {
-                renderAdminTable();
-                switchScreen('screen-admin');
-            }
-        }
-
-        function renderAdminTable() {
-            const history = JSON.parse(localStorage.getItem('thai_quest_history') || '[]');
-            const tbody = document.getElementById('admin-table-body');
-            tbody.innerHTML = history.map(h => `
-                <tr class="border-b">
-                    <td class="p-2">${h.name}</td>
-                    <td class="p-2">${h.class || '-'}</td>
-                    <td class="p-2">${h.stars}</td>
-                    <td class="p-2 font-bold">${h.lastScore}/${gameState.totalSteps}</td>
-                </tr>
-            `).join('');
-        }
-
-        function clearData() {
-            if(confirm('ลบข้อมูลนักเรียนทั้งหมด?')) {
-                localStorage.clear();
-                alert('ลบเรียบร้อย');
-                window.location.reload();
-            }
-        }
-
-        function exportData() {
-            const history = localStorage.getItem('thai_quest_history') || '[]';
-            const blob = new Blob([history], {type: 'text/json'});
-            const a = document.createElement('a');
-            a.href = URL.createObjectURL(blob);
-            a.download = 'student_data.json';
-            a.click();
-        }
-
-        // Init
-        window.onload = () => {
-            console.log("🇹🇭 ผจญภัยอาณาจักรพยัญชนะไทย พร้อมสนุก!");
-            // Smooth animations for mobile safari
-            document.body.addEventListener('touchstart', () => {}, {passive: true});
-        };
-    </script>
+    }
+</script>
 </body>
 </html>
